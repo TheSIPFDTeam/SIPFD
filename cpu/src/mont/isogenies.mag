@@ -1,0 +1,102 @@
+clear;
+CONSTRUCT_ISOGENY := function(C, E)
+   /* ------------------------------------------------------ *
+    * VELU'S FORMULAES : MONTGOMERY  FORM                    *
+    * ------------------------------------------------------ *
+    * INPUTS:                                                *
+    *         C : A CYCLIC SUBGROUP OF E(F_{p^2}).           *
+    *         E : A SUPERSINGULAR ELLIPTIC CURVE,            *
+    * -------------------------------------------------------*
+    * OUPUTS:                                                *
+    *         E' : E / C,                                    *
+    * ------------------------------------------------------ */
+	
+   // --------------------------------------------------------
+   // GET THE COEFFICIENTS OF E
+   ai := Eltseq(E);
+   a1 := ai[1];
+   a2 := ai[2];
+   a3 := ai[3];
+   a4 := ai[4];
+   a6 := ai[5];
+
+   xQ_Set :=[];
+   sigma_Set := [];
+
+   // --------------------------------------------------------
+   // REMOVE 0 FROM C
+   O := E ! 0;
+   if (O in C) then
+      Exclude(~C, O);
+   end if;
+
+   // --------------------------------------------------------
+   if (#C gt 0) then
+      for Q in C do
+         xQ := Q[1];
+         Append(~xQ_Set, xQ);
+         Append(~sigma_Set, xQ-1/xQ);
+      end for;
+   end if;
+
+   // --------------------------------------------------------
+   A1 := a1;
+   A2 := (&*xQ_Set)*(a2-3*&+sigma_Set);
+   A3 := a3;
+   A4 := a4;
+   A6 := a6;
+
+   Ec := EllipticCurve([A1, A2, A3, A4, A6]);
+
+   return Ec;
+end function;
+
+EVALUATE_ISOGENY := function(P, C, E)
+   /* ------------------------------------------------------ *
+    * VELU'S FORMULAES : MONTGOMERY  FORM                    *
+    * ------------------------------------------------------ *
+    * INPUTS:                                                *
+    *          P : A POINT OF E(F_{p^2}),                    *
+    *          C : A CYCLIC SUBGROUP OF E(F_{p^2}).          *
+    *          E : E / C.                                    *
+    * -------------------------------------------------------*
+    * OUPUTS:                                                *
+    *         P' : PHI(P).                                   *
+    * ------------------------------------------------------ */
+
+   f_Set := [];
+   x := P[1];
+   
+   // --------------------------------------------------------
+   // REMOVE 0 FROM C
+   O := E ! 0;
+   if (O in C) then
+      Exclude(~C, O);
+   end if;
+
+   // --------------------------------------------------------
+   if (#C gt 0) then
+      for Q in C do
+         xQ := Q[1];
+         Append(~f_Set, (x*xQ-1)/(x-xQ));
+      end for;
+   end if;
+   
+   // --------------------------------------------------------
+   _, R := IsPoint(E, x*&*f_Set);
+   return R;
+end function;
+
+
+ISOGENY := function(K, E, d, e)
+   R := K;
+   C := E;
+   for i:= 1 to (e - 1) do
+      T := d ^ (e - i) * R;
+      C := CONSTRUCT_ISOGENY([ k * T : k in [0 .. (d - 1)]], C);
+      R := EVALUATE_ISOGENY(R, [ k * T : k in [0 .. (d - 1)]], C);
+   end for;
+   C := CONSTRUCT_ISOGENY([ k * R : k in [0 .. (d-1)]], C);
+   return C;
+end function;
+

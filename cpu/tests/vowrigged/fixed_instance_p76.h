@@ -1,0 +1,20 @@
+/* +++ Fixed instance for p76 +++ */
+
+proj_t E[2] = {{{{0xccf61aa5f0435be,0x33e},{0x27e0719fd5fc85ab,0x4c}},{{0x7cc96c378ce38661,0x485},{0x938f187c791a8dfd,0x28e}}},{{{0x4d1bd773f30c23f8,0xda2},{0x51c8ef1ec06c3e77,0x1bb}},{{0xfe768e8b5b3d5eae,0x3d2},{0xdef1c44ddd734c5c,0x7f6}}}};
+
+proj_t notE[2] = {{{{0xccf61aa5f0435be,0x33e},{0x27e0719fd5fc85ab,0x4c}},{{0x92a6a5e2d220af5c,0xce0},{0x96f209935ce1f7ad,0xbe5}}},{{{0x4d1bd773f30c23f8,0xda2},{0x51c8ef1ec06c3e77,0x1bb}},{{0x4ea548e897cec54a,0x9cf},{0x7577db40e2f8f21a,0x7ec}}}};
+
+proj_t BASIS[2][3] = {{{{{0x24cc5d695ee824f0,0xa45},{0xbf3f995689f5834c,0xb45}},{{0x3d8d322ad9dcaeb8,0x421},{0x774106007b777bd7,0x1c8}}},{{{0x6b8ae7ab4365995b,0xc83},{0xdfc126dc01bbb049,0x9f0}},{{0xabcd89b7052f0a8e,0x9a5},{0x7f174383a5533f48,0x752}}},{{{0x81dad09787488606,0xd2a},{0x58fb3e6148986557,0x608}},{{0x64287688ac40e2cd,0x5b7},{0x44363cb9adf22614,0x26b}}}},{{{{0xdd507b88b6986b42,0x4},{0xc1637632be6c8456,0x277}},{{0x39a22d3a09bef7d6,0xa82},{0xdae4423040afda67,0x77d}}},{{{0x7a3ece0bb83062b8,0xb9b},{0x1092d8642628cf5f,0x147}},{{0x7818984d5eaf2d67,0xd66},{0x13b761a302c1ddef,0xd8c}}},{{{0xd540f4510febe78f,0x554},{0xf45bdbed97c81f7c,0x22c}},{{0x22e5dc801de72c5,0x78e},{0x727b87f1fbee4da6,0xa4d}}}}};
+
+
+//##############################
+    //#THE SECRET COLLISION IS:
+    	//# c0 = 0;
+    	//# k0 = 65808
+    	//# c1 = 1;
+    	//# k1 = 13706
+    //# THE KERNEL POINTS ARE
+    	//#K0_x = 0x0000000000000b9a4d7621f4499edafe + i * 0x00000000000008af4d124ac71e2f8e1f;
+    	//#K1_x = 0x0000000000000b3a359b516fc1d4ce22 + i * 0x0000000000000555d31f8470861a05f5;
+//# Dont tell anyone!
+//##############################

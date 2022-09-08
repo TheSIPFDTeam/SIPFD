@@ -1,0 +1,156 @@
+clear;
+CONSTRUCT_ISOGENY := function(C, E)
+   /* ------------------------------------------------------ *
+    * VELU'S FORMULAES : WEIERSTRASS FORM                    *
+    * ------------------------------------------------------ *
+    * INPUTS:                                                *
+    *         C : A CYCLIC SUBGROUP OF E(F_{p^2}).           *
+    *         E : A SUPERSINGULAR ELLIPTIC CURVE,            *
+    * -------------------------------------------------------*
+    * OUPUTS:                                                *
+    *         E' : E / C,                                    *
+    *        PHI : THE ISOGENY WITH KERNEL C FROM E TO E/C.  *
+    * ------------------------------------------------------ */
+	
+   // --------------------------------------------------------
+   // GET THE COEFFICIENTS OF E
+   ai := Eltseq(E);
+   a1 := ai[1];
+   a2 := ai[2];
+   a3 := ai[3];
+   a4 := ai[4];
+   a6 := ai[5];
+
+   C_2 := [];
+   R := [];
+   S := [];
+   v := 0;
+   w := 0;
+   vQ_Set :=[];
+   uQ_Set :=[];
+   xQ_Set :=[];
+   yQ_Set := [];
+   gQx_Set :=[];
+   gQy_Set := [];
+
+   // SPLIT C AS R u (-R) u C2, WHERE C2 CONTAINS ORDER-2 
+   // POINTS.
+	
+   // --------------------------------------------------------
+   // REMOVE 0 FROM C
+   O := E ! 0;
+   if (O in C) then
+      Exclude(~C, O);
+   end if;
+
+   if (#C gt 0) then
+   // -----------------------------------------------------
+      for p in C do
+         if(2*p eq O) then
+            // ORDER-2 POINST IN C
+            Append(~C_2, p);
+         elif( (-p in R) eq false) then
+            // WE ADD p TO R IF (-p) DOESN'T BELONG TO R
+            Append(~R, p);
+         end if;
+      end for;
+
+      // S = R u C_2
+      S := R cat C_2;
+
+      // -----------------------------------------------------
+      for Q in S do
+         xQ := Q[1];
+         yQ := Q[2];
+         Append(~xQ_Set, xQ);
+         Append(~yQ_Set, yQ);
+         gQx := 3*Q[1]^2 + 2*a2* xQ + a4 - a1*yQ;
+         gQy := -2*yQ -a1*xQ - a3;
+
+         Append(~gQx_Set, gQx);
+         Append(~gQy_Set, gQy);
+
+         if 2*Q eq O then
+            vQ := gQx;
+         else
+            vQ := 2*gQx - a1*gQy;
+         end if;
+         Append(~vQ_Set, vQ);
+
+         uQ := gQy^2;
+         Append(~uQ_Set, uQ);
+         v +:= vQ;
+         w +:= uQ + xQ*vQ; 
+      end for;
+   end if;
+
+   // --------------------------------------------------------
+   A1 := a1;
+   A2 := a2;
+   A3 := a3;
+   A4 := a4 - 5*v;
+   A6 := a6 - (a1^2 + 4*a2)*v - 7*w;
+
+   Ec := EllipticCurve([A1, A2, A3, A4, A6]);
+
+   // NOW, THE ISOGENY WITH KERNEL C IS DETERMINED BY THE
+   // FOLLOWING VALUES
+   Isog := [xQ_Set, yQ_Set, vQ_Set, uQ_Set, gQx_Set, gQy_Set];
+	
+   return Ec, Isog;
+end function;
+
+EVALUATE_ISOGENY := function(P, Isog, E)
+   /* ------------------------------------------------------ *
+    * VELU'S FORMULAES : WEIERSTRASS FORM                    *
+    * ------------------------------------------------------ *
+    * INPUTS:                                                *
+    *          P : A POINT OF E(F_{p^2}),                    *
+    *        PHI : ISOGENY FROM E TO E/C [OUTPUT OF          *
+    *               CONSTRUCT_ISOGENY()],                    *
+    *          E : E / C.                                    *
+    * -------------------------------------------------------*
+    * OUPUTS:                                                *
+    *         P' : PHI(P).                                   *
+    * ------------------------------------------------------ */
+   ai := Eltseq(E);
+   a1 := ai[1];
+   a2 := ai[2];
+   a3 := ai[3];
+   a4 := ai[4];
+   a6 := ai[5];
+
+   xQ  := Isog[1];
+   yQ  := Isog[2];
+   vQ  :=Isog[3];
+   uQ  :=Isog[4];
+   gQx := Isog[5];
+   gQy := Isog[6];
+
+   x := P[1];
+   y := P[2];
+   alpha := 0;
+   beta := 0;
+   // --------------------------------------------------------
+   for i := 1 to #xQ do
+      c := (x - xQ[i])^-1;
+      c2 := c^2;
+      c3 := c2* c;
+      alpha +:=  vQ[i] *c  + uQ[i] * c2 ;
+      beta +:= uQ[i]*(2*y + a1*x + a3)*(c3) + vQ[i] * (a1*c + y - yQ[i])  * c2 + (a1*uQ[i] - gQx[i]*gQy[i]) * c2;
+   end for;
+
+   return E![alpha + x, y - beta,1];
+end function;
+
+ISOGENY := function(K, E, d, e)
+   R := K;
+   C := E;
+   for i:= 1 to (e - 1) do
+      T := d ^ (e - i) * R;
+      C, I := CONSTRUCT_ISOGENY([ k * T : k in [0 .. (d - 1)]], C);
+      R := EVALUATE_ISOGENY(R, I, C);
+   end for;
+   C, _ := CONSTRUCT_ISOGENY([ k * R : k in [0 .. (d-1)]], C);
+   return C;
+end function;

@@ -1,0 +1,36 @@
+#include "api.h"
+
+__constant__ limb_t __p[NWORDS_FIELD] = { 0xFFFFFFFFFFFFFFFF, 0xD8EF95BFFFFFFFFF, 0xC85853D712AD0097, 0x0000000000000A72 };
+__constant__ limb_t __mu[NWORDS_FIELD] = { 0x0000000000000001, 0xD8EF95C000000000, 0xC85853D712AD0097, 0x07F7D56CF4191A72 };
+__constant__ limb_t mont_one[NWORDS_FIELD] = { 0x0018805DC04C249C, 0xA7F1BF0000000000, 0xF525E46A96CCCAC5, 0x0000000000000616 };
+__constant__ limb_t mont_minus_one[NWORDS_FIELD] = { 0xFFE77FA23FB3DB63, 0x30FDD6BFFFFFFFFF, 0xD3326F6C7BE035D2, 0x000000000000045B };
+__constant__ limb_t bigone[NWORDS_FIELD] = { 0x0000000000000001, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000 };
+
+__device__ limb_t P_MINUS_TWO[NWORDS_FIELD] = { 0xFFFFFFFFFFFFFFFD, 0xD8EF95BFFFFFFFFF, 0xC85853D712AD0097, 0x0000000000000A72 };
+__device__ limb_t P_MINUS_THREE_QUARTERS[NWORDS_FIELD] = { 0xFFFFFFFFFFFFFFFF, 0xF63BE56FFFFFFFFF, 0xB21614F5C4AB4025, 0x000000000000029C };
+__device__ limb_t P_MINUS_ONE_HALVES[NWORDS_FIELD] = { 0xFFFFFFFFFFFFFFFF, 0xEC77CADFFFFFFFFF, 0x642C29EB8956804B, 0x0000000000000539 };
+
+__device__ limb_t BOUND2[NWORDS_FIELD] = { 0x0000000000000000, 0x0000002000000000, 0x0000000000000000, 0x0000000000000000 };
+__constant__ limb_t BOUND2_0[NWORDS_FIELD] = { 0x0002000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000 };
+__constant__ limb_t BOUND2_1[NWORDS_FIELD] = { 0x0002000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000 };
+
+__device__ limb_t BOUND3[NWORDS_FIELD] = { 0x1AA0817B34D8F623, 0x000000000512B584, 0x0000000000000000, 0x0000000000000000 };
+__device__ limb_t BOUND3_0[NWORDS_FIELD] = { 0x000014CE6B167F31, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000 };
+__device__ limb_t BOUND3_1[NWORDS_FIELD] = { 0x000014CE6B167F31, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000 };
+
+const limb_t h_mont_one[NWORDS_FIELD] = { 0x0018805DC04C249C, 0xA7F1BF0000000000, 0xF525E46A96CCCAC5, 0x0000000000000616 };
+
+__device__ limb_t STRATEGY2[101] = { 45, 26, 14, 8, 4, 2, 1, 1, 1, 2, 1, 1, 4, 2, 1, 1, 2, 1, 1, 6, 4, 2, 1, 1, 2, 1, 1, 2, 2, 1, 1, 1, 12, 6, 4, 2, 1, 1, 2, 1, 1, 2, 2, 1, 1, 1, 5, 3, 2, 1, 1, 1, 1, 2, 1, 1, 1, 19, 12, 6, 4, 2, 1, 1, 2, 1, 1, 2, 2, 1, 1, 1, 5, 3, 2, 1, 1, 1, 1, 2, 1, 1, 1, 8, 4, 3, 2, 1, 1, 1, 1, 2, 1, 1, 4, 2, 1, 1, 2, 1, 1};
+__device__ limb_t STRATEGY2_0[50] = { 22, 13, 7, 4, 2, 1, 1, 1, 2, 1, 1, 3, 2, 1, 1, 1, 1, 6, 3, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 9, 6, 3, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 4, 2, 1, 1, 1, 2, 1, 1};
+__device__ limb_t STRATEGY2_1[50] = { 22, 13, 7, 4, 2, 1, 1, 1, 2, 1, 1, 3, 2, 1, 1, 1, 1, 6, 3, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 9, 6, 3, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 4, 2, 1, 1, 1, 2, 1, 1};
+
+__device__ limb_t STRATEGY2_REDUCED_0[49] = { 22, 12, 7, 4, 2, 1, 1, 1, 2, 1, 1, 3, 2, 1, 1, 1, 1, 5, 3, 2, 1, 1, 1, 1, 2, 1, 1, 1, 9, 6, 3, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 4, 2, 1, 1, 1, 2, 1, 1};
+__device__ limb_t STRATEGY2_REDUCED_1[49] = { 22, 12, 7, 4, 2, 1, 1, 1, 2, 1, 1, 3, 2, 1, 1, 1, 1, 5, 3, 2, 1, 1, 1, 1, 2, 1, 1, 1, 9, 6, 3, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 4, 2, 1, 1, 1, 2, 1, 1};
+
+__device__ limb_t STRATEGY2_PC_0[24] = { 10, 7, 4, 2, 1, 1, 2, 1, 1, 3, 2, 1, 1, 1, 1, 4, 2, 2, 1, 1, 1, 2, 1, 1};
+__device__ limb_t STRATEGY2_PC_1[24] = { 10, 7, 4, 2, 1, 1, 2, 1, 1, 3, 2, 1, 1, 1, 1, 4, 2, 2, 1, 1, 1, 2, 1, 1};
+
+__device__ uint32_t STRATEGY3[57] = { 21, 13, 9, 6, 3, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 3, 2, 1, 1, 1, 1, 1, 1, 5, 3, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 8, 5, 3, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 2, 1, 1, 1, 1, 1};
+//const uint32_t STRATEGY3_0[28] = { 10, 6, 5, 3, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 4, 2, 1, 1, 1, 1, 1, 1, 1};
+//const uint32_t STRATEGY3_1[28] = { 10, 6, 5, 3, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 4, 2, 1, 1, 1, 1, 1, 1, 1};
+

@@ -1,0 +1,15 @@
+bits := 70;
+e2_0 := bits div 2;
+e3_0 := Floor(Log(3,2)*(bits-e2_0));
+e3 := e3_0;
+f := 1;
+p := f*(2^e2_0)*(3^e3_0) - 1;
+while not (IsProbablyPrime(p) and Ceiling(Log(2,p)) eq bits) do
+	while (2*(f div 2) eq f) or (3*(f div 3) eq f) do
+		f := f+1;
+	end while;
+	e3 := Floor( Log(3,2)*(bits - e2_0 - Log(2, f)) );
+	p := f*2^e2_0*3^e3-1;
+	f := f+1;
+end while;
+print f-1, e2_0, e3, Log(2,p);
