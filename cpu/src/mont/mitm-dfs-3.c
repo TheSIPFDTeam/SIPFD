@@ -348,6 +348,17 @@ void get_roots_3(proj_t *starting_nodes[], uint64_t *starting_path, const proj_t
      * A node is {x(P), x(Q), x(P-Q), E} where <P, Q> = E(fp2)[3^(EXPONENT3 / 2 - level)]
      * There as nodes as cores: pre-computation step of 3^cores
      * ----------------------------------------------------------------------------- */
+
+    // Skip this for single-core
+    if((&context)->cores == 1){
+        proj_copy(starting_nodes[0][0], BASIS[0]);
+        proj_copy(starting_nodes[0][1], BASIS[1]);
+        proj_copy(starting_nodes[0][2], BASIS[2]);
+        proj_copy(starting_nodes[0][3], E);
+        starting_path[0] = 0;
+        return;
+    }
+    
     uint64_t element = 0;
     proj_t node[4];
     proj_copy(node[0], BASIS[0]);

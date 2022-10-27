@@ -71,11 +71,11 @@ void fp_pow(fp_t c, const fp_t a, const fp_t exp)
             if( (flag & exp[i]) != 0 )
             {
                 fp_mul(c, tmp, c);
-                fp2mul_counter += 1;
+                //fp2mul_counter += 1;
             }
 
             fp_sqr(tmp, tmp);
-            fp2sqr_counter += 1;
+            //fp2sqr_counter += 1;
             flag <<= 1;
         };
     };
@@ -272,7 +272,7 @@ void fp2_add(fp2_t c, const fp2_t a, const fp2_t b)
      * ------------------------------------------------------------- */
     fp_add(c[0], a[0], b[0]);
     fp_add(c[1], a[1], b[1]);
-    fp2add_counter += 2;
+    //fp2add_counter += 2;
 }   // 2 ADDS in Fp
 
 void fp2_sub(fp2_t c, const fp2_t a, const fp2_t b)
@@ -284,7 +284,7 @@ void fp2_sub(fp2_t c, const fp2_t a, const fp2_t b)
      * ------------------------------------------------------------- */
     fp_sub(c[0], a[0], b[0]);
     fp_sub(c[1], a[1], b[1]);
-    fp2add_counter += 2;
+    //fp2add_counter += 2;
 }   // 2 ADDS (SUBS) in Fp
 
 void fp2_mul(fp2_t c, const fp2_t a, const fp2_t b)
@@ -304,8 +304,8 @@ void fp2_mul(fp2_t c, const fp2_t a, const fp2_t b)
     fp_sub(c[1], tmp, z2);	//  (a[0] + a[1]) * (b[0] + b[1]) - a[0] * b[0]
     fp_sub(c[1], c[1], z3); //  (a[0] + a[1]) * (b[0] + b[1]) - a[0] * b[0] - a[1] * b[1] = a[1] * b[0] + a[0] * b[1]
 
-    fp2add_counter += 5;
-    fp2mul_counter += 3;
+    //fp2add_counter += 5;
+    //fp2mul_counter += 3;
 }   // 3 MULS + 5 ADDS in Fp
 
 void fp2_sqr(fp2_t b, const fp2_t a)
@@ -322,8 +322,8 @@ void fp2_sqr(fp2_t b, const fp2_t a)
     fp_mul(b[0], z1, z2);	// (a[0] + a[1]) * (a[0] - a[1]) = a[0]^2 - a[1]^2
     fp_mul(b[1], z0, a[1]);	// 2 * a[0] * a[1]
 
-    fp2add_counter += 3;
-    fp2mul_counter += 2;
+    //fp2add_counter += 3;
+    //fp2mul_counter += 2;
 }   // 2 MULS + 3 ADDS in Fp
 
 void fp2_inv(fp2_t b)
@@ -344,9 +344,9 @@ void fp2_inv(fp2_t b)
     fp_mul(b[0], S1, a[0]);	//  a[0] / (a[0] ^ 2 + a[1] ^ 2)
     fp_mul(b[1], S1, S2);   // -a[1] / (a[0] ^ 2 + a[1] ^ 2)
 
-    fp2add_counter += 2;
-    fp2sqr_counter += 2;
-    fp2mul_counter += 2;
+    //fp2add_counter += 2;
+    //fp2sqr_counter += 2;
+    //fp2mul_counter += 2;
 }   // 1 INV + 2 MULS + 2 SQR + 2 ADDS in Fp
 
 void fp2_pow(fp2_t c, const fp2_t a, const fp_t exp)

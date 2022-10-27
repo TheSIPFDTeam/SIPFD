@@ -7,5 +7,5 @@ and can be used to find lᵉ-isogenies between two supersingular elliptic curves
 
 - An optimized GPU implementation of the vOW attack.
 
-Compilation and execution instructions for both architectures are provided in the respective subdirectories. 
+Compilation and execution instructions for both architectures are provided in the respective subdirectories.
 

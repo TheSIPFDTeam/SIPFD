@@ -28,9 +28,7 @@ Before compiling, the GPU's architecture needs to be specified by setting ```CMA
 
 ## Requirements
 
-- CUDA Toolkit
-- cmake version >= 3.8
-- python3
+CUDA Toolkit
 
   
 

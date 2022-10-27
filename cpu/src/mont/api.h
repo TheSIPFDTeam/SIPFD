@@ -30,7 +30,7 @@ void fp2_printf(const fp2_t x);
 
 // Differential arithmetic (x-only projective point)
 typedef fp2_t proj_t[2];
-digit_t fp2mul_counter = 0, fp2sqr_counter = 0, fp2add_counter = 0;
+//digit_t fp2mul_counter = 0, fp2sqr_counter = 0, fp2add_counter = 0;
 
 #include "mont.h"
 

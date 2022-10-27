@@ -176,7 +176,7 @@ fp_add:
   call uintbig_add
   pop rdi
 
-  incq fpadd
+  //incq fpadd
 
   jmp .reduce_once
 
@@ -192,7 +192,7 @@ fp_sub:
   pop rdi
 
 
-  incq fpadd  /* increasing number of additions performed */
+  //incq fpadd  /* increasing number of additions performed */
 
   neg rax
 
@@ -246,7 +246,7 @@ fp_mul:
   push rbp
   push rbx
 
-  incq fpmul  /* increasing number of multiplications performed */
+  //incq fpmul  /* increasing number of multiplications performed */
 
   sub rsp, 32
   mov [rsp+ 24],rdi
@@ -336,8 +336,8 @@ fp_sq1:
 fp_sqr:
     mov rdx, rsi
 
-    decq fpmul
-    incq fpsqr
+    //decq fpmul
+    //incq fpsqr
 
     jmp fp_mul
 
